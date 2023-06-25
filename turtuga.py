@@ -68,12 +68,6 @@ def dibujarTablero():
 	skk.end_fill()
 	skk.forward(100)
 
-def sqrfunc(size):
-	for i in range(4):
-		skk.fd(size)
-		dibujoCuadrado(5)
-		skk.left(90)
-		size = size - 5
 
 def dibujoCuadrado(tamano_casilla):
 
@@ -88,12 +82,8 @@ def dibujoCuadrado(tamano_casilla):
 
 
 dibujarTablero()
-sqrfunc(146)
-sqrfunc(126)
-sqrfunc(106)
-sqrfunc(86)
-sqrfunc(66)
-sqrfunc(46)
-sqrfunc(26)
-sqrfunc(6)
+print(wn.getcanvas().postscript().encode())
+
+
+
 
