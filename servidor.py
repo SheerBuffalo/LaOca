@@ -68,6 +68,11 @@ def dibujarTablero():
 	skk.end_fill()
 	skk.forward(100)
 
+def IniciarJuego():
+	tableroInicial=wn
+	skk.penup()
+	skk.goto(-170, -170)  # Posición inicial del jugador
+	skk.pendown()
 
 def dibujoCuadrado(tamano_casilla):
 
@@ -82,7 +87,8 @@ def dibujoCuadrado(tamano_casilla):
 
 
 dibujarTablero()
-print(wn.getcanvas().postscript().encode())
+
+
 
 
 
