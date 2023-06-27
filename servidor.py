@@ -7,16 +7,16 @@ boton_y =-10
 botonLon =50  
 botonan =30
 
-player1_x=-200
-player1_y=-200
-
+player1_x=-175
+player1_y=-225
+casillaOrigen=1
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
 skk.penup()
 skk.goto(-200, -200)  # Posición inicial del tablero
 skk.pendown()
-skk.speed(40)
+skk.speed(60)
 jugador1 = turtle.Turtle()
 jugador1.color("red")
 jugador1.shape("triangle")
@@ -157,23 +157,112 @@ def draw_rect_button(pen, message = 'dado'):
     pen.end_fill()
     pen.goto(boton_x + 15, boton_y + 15)
     pen.write(message, font = ('Arial', 11, 'normal'))
+def avanzarJugador(tortuga, num_avance):
+	global casillaOrigen
+	retacha=False
+	for i in range(num_avance):
+		posicion = evaluacionPosicion(casillaOrigen)
+		if(not retacha):
+			posicionDestino = evaluacionPosicion(casillaOrigen+1)
+			if(posicion!=posicionDestino):
+				if(posicionDestino=="DIAGONAL"):
+					tortuga.fd(35)
+					tortuga.left(45)
+					tortuga.fd(25)
+				else:
+					tortuga.fd(30)
+					tortuga.left(45)
+					tortuga.forward(35)
+			elif(posicionDestino==posicion):
+				tortuga.fd(55)
+			casillaOrigen+=1
+			if(casillaOrigen==63):
+				retacha=True
+		else:
+			posicionDestino = evaluacionPosicion(casillaOrigen-1)
+			if(posicion!=posicionDestino):
+				if(posicionDestino=="DIAGONAL"):
+					tortuga.backward(35)
+					tortuga.right(45)
+					tortuga.backward(25)
+				else:
+					tortuga.backward(30)
+					tortuga.right(45)
+					tortuga.backward(35)
+			elif(posicionDestino==posicion):
+				tortuga.backward(55)
+			casillaOrigen-=1
+		print(posicion)
+		print(posicionDestino)
+						
+	
+def evaluacionPosicion(num_casilla):
+	esLinea_1 = num_casilla>=0 and num_casilla<9
+	if(esLinea_1):
+		return "LINEA"
+	esDiagonal_1 = num_casilla == 9
+	if(esDiagonal_1):
+		return "DIAGONAL"
+	esVertical_1 = num_casilla>9 and num_casilla<16
+	if(esVertical_1):
+		return "VERTICAL"
+	esDiagonal_2 = num_casilla==16
+	if(esDiagonal_2):
+		return "DIAGONAL"
+	esLinea_2 = num_casilla>16 and num_casilla<26
+	if(esLinea_2):
+		return "LINEA"
+	esDiagonal_3 = num_casilla == 26
+	if(esDiagonal_3):
+		return "DIAGONAL"
+	esVertical_2 = num_casilla>26 and num_casilla<32
+	if(esVertical_2):
+		return "VERTICAL"
+	esDiagonal_4 = num_casilla==32
+	if(esDiagonal_4):
+		return "DIAGONAL"
+	esLinea_3 = num_casilla>32 and num_casilla<41
+	if(esLinea_3):
+		return "LINEA"
+	esDiagonal_5 = num_casilla == 41
+	if(esDiagonal_5):
+		return "DIAGONAL"
+	esVertical_3 = num_casilla>41 and num_casilla<46
+	if(esVertical_3):
+		return "VERTICAL"
+	esDiagonal_6 = num_casilla==46
+	if(esDiagonal_6):
+		return "DIAGONAL"
+	esLinea_4 = num_casilla>46 and num_casilla<54
+	if(esLinea_4):
+		return "LINEA"
+	esDiagonal_7 = num_casilla == 54
+	if(esDiagonal_7):
+		return "DIAGONAL"
+	esVertical_4 = num_casilla>54 and num_casilla<58
+	if(esVertical_4):
+		return "VERTICAL"
+	esDiagonal_8 = num_casilla==58
+	if(esDiagonal_8):
+		return "DIAGONAL"
+	esLinea_5 = num_casilla>58 and num_casilla<=63
+	if(esLinea_5):
+		return "LINEA"
 
 def click(x,y):
-	global mode
-	global player1_x
-	global player1_y
+	global mode,casilla
+	
 	if boton_x<=x<=boton_x+botonLon:
 		if boton_y<=y<=boton_y+botonan:
-			player1_x=player1_x+5
-			jugador1.setposition(player1_x,player1_y)
-			print("alan weon")
+
+			avanzarJugador(jugador1, 12)
 			
 
 dibujarTablero()
 
 speed=1
 while True:
-	skk.foward(speed)
+	skk.forward(speed)
 
 
 
