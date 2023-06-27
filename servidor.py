@@ -10,6 +10,7 @@ botonan =30
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
+wn.title("Servidor")
 skk.penup()
 skk.goto(-200, -200)  # Posición inicial del tablero
 skk.pendown()
@@ -17,7 +18,10 @@ skk.pendown()
 colores = {
     "red": "rojo",
     "blue": "azul",
-    "green": "verde"
+    "green": "verde",
+    "cyan":	"cyan",
+    "yellow": "amarillo",
+    "magenta": "magenta"
 }
 
 def dibujarTablero():
@@ -109,7 +113,7 @@ def IniciarServidor():
 	skk.goto(-170, -170)  # Posición inicial del jugador
 	skk.pendown()
 	server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	server_socket.bind(('192.168.0.200', 12345))
+	server_socket.bind(('192.168.0.194', 12345))
 	server_socket.listen(1)
 	print('Esperando conexión del cliente...')
 	client_socket, client_address = server_socket.accept()
@@ -152,8 +156,5 @@ def click(x,y):
 			print("camara alan")
 
 dibujarTablero()
-
-
-
 
 

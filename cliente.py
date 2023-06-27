@@ -12,7 +12,10 @@ skk.pendown()
 colores = {
     "red": "rojo",
     "blue": "azul",
-    "green": "verde"
+    "green": "verde",
+    "cyan":	"cyan",
+    "yellow": "amarillo",
+    "magenta": "magenta"
 }
 
 def dibujarTablero():
@@ -100,7 +103,7 @@ def IniciarJuego():
 	skk.goto(-170, -170)  # Posición inicial del jugador
 	skk.pendown()
 	client_socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	client_socket.connect(('192.168.0.200', 12345))
+	client_socket.connect(('192.168.0.194', 12345))
 
 def dibujoCuadrado(tamano_casilla, i):
 
