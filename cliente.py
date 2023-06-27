@@ -1,3 +1,5 @@
+#version 0.22
+#primer numero julio, segundo alan
 import turtle #Inside_Out
 import random
 import socket
@@ -144,14 +146,17 @@ def draw_rect_button(pen, message = 'dado'):
     pen.write(message, font = ('Arial', 11, 'normal'))
 
 def click(x,y):
-	global dado1,dado2
+	global client_socket
 	if boton_x<=x<=boton_x+botonLon:
 		if boton_y<=y<=boton_y+botonan:
 			dado1=random.randint(1,6)
 			dado2=random.randint(1,6)
+	print(f"Sacaste los numeros", dado1, dado2)
+	suma=dado1+dado2
+	client_socket.send(suma)
+			
 
 conexionCliente(client_socket)
 print("Sali del bucle")
-client_socket.send("Recibido comando espacial".encode())
-#dibujarTablero()
+dibujarTablero()
 

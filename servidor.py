@@ -1,3 +1,5 @@
+#version 0.22
+#primer numero julio, segundo alan
 import turtle #Inside_Out
 import random
 import socket
@@ -103,8 +105,6 @@ def dibujarTablero():
 	skk.right(45)
 	skk.pendown()
 	skk.forward(100)
-	draw_rect_button(skk)
-	wn.onclick(click)
     
 
 def conexionServidor(servidor):
@@ -134,30 +134,9 @@ def dibujoCuadrado(tamano_casilla, i):
 	skk.forward(tamano_casilla)
 	skk.pendown()
 
-def draw_rect_button(pen, message = 'dado'):
-    pen.penup()
-    pen.begin_fill()
-    pen.goto(boton_x, boton_y)
-    pen.goto(boton_x + botonLon, boton_y)
-    pen.goto(boton_x + botonLon, boton_y + botonan)
-    pen.goto(boton_x, boton_y + botonan)
-    pen.goto(boton_x, boton_y)
-    pen.end_fill()
-    pen.goto(boton_x + 15, boton_y + 15)
-    pen.write(message, font = ('Arial', 11, 'normal'))
-
-def click(x,y):
-	global dado1,dado2
-	if boton_x<=x<=boton_x+botonLon:
-		if boton_y<=y<=boton_y+botonan:
-			dado1=random.randint(1,6)
-			dado2=random.randint(1,6)
 
 cliente = conexionServidor(server_socket)
-
-data = cliente.recv(1024)  # recibe datos del servidor
+dibujarTablero()
+data = cliente.recv(1024)  # recibe datos del cliente
 print('Received from server: ', data.decode())
-#dibujarTablero()
-
-
 
