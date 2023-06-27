@@ -2,6 +2,11 @@ import turtle #Inside_Out
 import random
 import socket
 
+boton_x =-10
+boton_y =-10
+botonLon =50  
+botonan =30
+
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
@@ -93,6 +98,10 @@ def dibujarTablero():
 	skk.right(45)
 	skk.pendown()
 	skk.forward(100)
+	draw_rect_button(skk)
+	wn.onclick(click)
+	turtle.done()
+    
 
 def IniciarServidor():
 	tableroInicial=wn
@@ -124,10 +133,25 @@ def dibujoCuadrado(tamano_casilla, i):
 	skk.forward(tamano_casilla)
 	skk.pendown()
 
+def draw_rect_button(pen, message = 'dado'):
+    pen.penup()
+    pen.begin_fill()
+    pen.goto(boton_x, boton_y)
+    pen.goto(boton_x + botonLon, boton_y)
+    pen.goto(boton_x + botonLon, boton_y + botonan)
+    pen.goto(boton_x, boton_y + botonan)
+    pen.goto(boton_x, boton_y)
+    pen.end_fill()
+    pen.goto(boton_x + 15, boton_y + 15)
+    pen.write(message, font = ('Arial', 11, 'normal'))
+
+def click(x,y):
+	global mode
+	if boton_x<=x<=boton_x+botonLon:
+		if boton_y<=y<=boton_y+botonan:
+			print("camara alan")
+
 dibujarTablero()
-IniciarServidor()
-
-
 
 
 
