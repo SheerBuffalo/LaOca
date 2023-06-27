@@ -7,6 +7,7 @@ boton_y =-10
 botonLon =50  
 botonan =30
 
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
@@ -104,20 +105,16 @@ def dibujarTablero():
 	skk.forward(100)
 	draw_rect_button(skk)
 	wn.onclick(click)
-	turtle.done()
     
 
-def IniciarServidor():
-	tableroInicial=wn
-	skk.penup()
-	skk.goto(-170, -170)  # Posición inicial del jugador
-	skk.pendown()
-	server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	server_socket.bind(('192.168.0.194', 12345))
-	server_socket.listen(1)
+def conexionServidor(servidor):
+	servidor.bind(('192.168.0.194', 12345))
+	servidor.listen(1)
 	print('Esperando conexión del cliente...')
-	client_socket, client_address = server_socket.accept()
+	client_socket, client_address = servidor.accept()
 	print(f'Cliente conectado desde {client_address}')
+	client_socket.send("Connected".encode())
+	return client_socket
 
 def dibujoCuadrado(tamano_casilla, i):
 
@@ -150,11 +147,17 @@ def draw_rect_button(pen, message = 'dado'):
     pen.write(message, font = ('Arial', 11, 'normal'))
 
 def click(x,y):
-	global mode
+	global dado1,dado2
 	if boton_x<=x<=boton_x+botonLon:
 		if boton_y<=y<=boton_y+botonan:
-			print("camara alan")
+			dado1=random.randint(1,6)
+			dado2=random.randint(1,6)
 
-dibujarTablero()
+cliente = conexionServidor(server_socket)
+
+data = cliente.recv(1024)  # recibe datos del servidor
+print('Received from server: ', data.decode())
+#dibujarTablero()
+
 
 

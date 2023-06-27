@@ -2,9 +2,17 @@ import turtle #Inside_Out
 import random
 import socket
 
+boton_x =-10
+boton_y =-10
+botonLon =50  
+botonan =30
+client_socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+dado1=0
+dado2=0
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
+wn.title("Cliente")
 skk.penup()
 skk.goto(-200, -200)  # Posición inicial del tablero
 skk.pendown()
@@ -96,14 +104,14 @@ def dibujarTablero():
 	skk.right(45)
 	skk.pendown()
 	skk.forward(100)
+	draw_rect_button(skk)
+	wn.onclick(click)
+	turtle.done()
 	
-def IniciarJuego():
-	tableroInicial=wn
-	skk.penup()
-	skk.goto(-170, -170)  # Posición inicial del jugador
-	skk.pendown()
-	client_socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	client_socket.connect(('192.168.0.194', 12345))
+def conexionCliente(cliente):
+	cliente.connect(('192.168.0.194', 12345))
+	data = cliente.recv(1024)  # recibe datos del servidor
+	print('Received from server: ', data.decode())
 
 def dibujoCuadrado(tamano_casilla, i):
 
@@ -123,6 +131,27 @@ def dibujoCuadrado(tamano_casilla, i):
 	skk.forward(tamano_casilla)
 	skk.pendown()
 
+def draw_rect_button(pen, message = 'dado'):
+    pen.penup()
+    pen.begin_fill()
+    pen.goto(boton_x, boton_y)
+    pen.goto(boton_x + botonLon, boton_y)
+    pen.goto(boton_x + botonLon, boton_y + botonan)
+    pen.goto(boton_x, boton_y + botonan)
+    pen.goto(boton_x, boton_y)
+    pen.end_fill()
+    pen.goto(boton_x + 15, boton_y + 15)
+    pen.write(message, font = ('Arial', 11, 'normal'))
 
+def click(x,y):
+	global dado1,dado2
+	if boton_x<=x<=boton_x+botonLon:
+		if boton_y<=y<=boton_y+botonan:
+			dado1=random.randint(1,6)
+			dado2=random.randint(1,6)
 
-dibujarTablero()
+conexionCliente(client_socket)
+print("Sali del bucle")
+client_socket.send("Recibido comando espacial".encode())
+#dibujarTablero()
+
