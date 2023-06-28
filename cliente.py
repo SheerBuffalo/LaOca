@@ -7,6 +7,7 @@ import turtle #Inside_Out
 import random
 import socket
 
+direccionIP = '192.168.0.194'
 turnoParaJugar = False #Es mi turno para jugar?
 identificador="0" #Que jugador soy?
 casillaOrigen=1 #En que casilla empiezo?
@@ -117,11 +118,11 @@ def dibujarTablero():
 	skk.forward(100)
 	draw_rect_button(skk)
 	wn.onclick(click)
-	skk.done()
+	turtle.done()
 	
-def conexionCliente(cliente):
+def conexionCliente(cliente, direccionIP):
 	global identificador
-	cliente.connect(('192.168.0.194', 12345))
+	cliente.connect((direccionIP, 12345))
 	data = cliente.recv(1024)  # recibe datos del servidor
 	print('Received from server: ', data.decode())
 	identificador=data.decode()
@@ -280,29 +281,28 @@ def comunicacion_con_servidor():
 			dadosOponente=int(dadosOponenteBYTES)
 			print(f"Datos de los otros jugadores:",dadosOponente)
 
-def graficos_con_turtle():
 	
-	if(identificador=="1"):
-		jugador.color("white")
-		wn.title("Cliente1")
-	elif(identificador=="2"):
-		jugador.color("black")
-		wn.title("Cliente2")
-	elif(identificador=="3"):
-		jugador.color("brown")
-		wn.title("Cliente3")
-	jugador.shape("triangle")
-	jugador.penup()
-	jugador.speed(0)
-	jugador.setposition(-175,-225)
-	dibujarTablero()
+	
 
 
 ##########	MAIN	 ###################3
 
-conexionCliente(client_socket)
-hilo_turtle = threading.Thread(target=graficos_con_turtle)
+conexionCliente(client_socket, direccionIP)
+if(identificador=="1"):
+	jugador.color("white")
+	wn.title("Cliente1")
+elif(identificador=="2"):
+	jugador.color("black")
+	wn.title("Cliente2")
+elif(identificador=="3"):
+	jugador.color("brown")
+	wn.title("Cliente3")
+jugador.shape("triangle")
+jugador.penup()
+jugador.speed(0)
+jugador.setposition(-175,-225)
+	
 hilo_socket = threading.Thread(target=comunicacion_con_servidor)
 
-hilo_turtle.start()
 hilo_socket.start()
+dibujarTablero()
