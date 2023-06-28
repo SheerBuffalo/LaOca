@@ -117,7 +117,7 @@ def dibujarTablero():
 	skk.forward(100)
 	draw_rect_button(skk)
 	wn.onclick(click)
-	wn.mainloop()
+	skk.done()
 	
 def conexionCliente(cliente):
 	global identificador
