@@ -125,6 +125,7 @@ def conexionCliente(cliente):
 	data = cliente.recv(1024)  # recibe datos del servidor
 	print('Received from server: ', data.decode())
 	identificador=data.decode()
+	
 
 def dibujoCuadrado(tamano_casilla, i):
 
@@ -262,38 +263,46 @@ def evaluacionPosicion(num_casilla):
 	if(esLinea_5):
 		return "LINEA"
 	
+def comunicacion_con_servidor():
+	global turnoParaJugar, client_socket
+	while True:
+		print("Estoy escuchando :D")
+		datos= client_socket.recv(1024) #Todo el rato escucho al servidor
+		print("OMG recibi algo")
+		if(datos.decode()=="SI"):
+			turnoParaJugar=True
+			print("Es mi turno para jugar")
+		elif(datos.decode()=="NO"):
+			turnoParaJugar=False
+			print("No es mi turno para jugar")
+		else:
+			dadosOponenteBYTES=datos.decode()
+			dadosOponente=int(dadosOponenteBYTES)
+			print(f"Datos de los otros jugadores:",dadosOponente)
+
+def graficos_con_turtle():
+	
+	if(identificador=="1"):
+		jugador.color("white")
+		wn.title("Cliente1")
+	elif(identificador=="2"):
+		jugador.color("black")
+		wn.title("Cliente2")
+	elif(identificador=="3"):
+		jugador.color("brown")
+		wn.title("Cliente3")
+	jugador.shape("triangle")
+	jugador.penup()
+	jugador.speed(0)
+	jugador.setposition(-175,-225)
+	dibujarTablero()
+
+
 ##########	MAIN	 ###################3
 
 conexionCliente(client_socket)
-if(identificador=="1"):
-	jugador.color("white")
-	wn.title("Cliente1")
-elif(identificador=="2"):
-	jugador.color("black")
-	wn.title("Cliente2")
-elif(identificador=="3"):
-	jugador.color("brown")
-	wn.title("Cliente3")
-	
+hilo_turtle = threading.Thread(target=graficos_con_turtle)
+hilo_socket = threading.Thread(target=comunicacion_con_servidor)
 
-jugador.shape("triangle")
-jugador.penup()
-jugador.speed(0)
-jugador.setposition(-175,-225)
-dibujarTablero()
-
-while True:
-	print("Estoy escuchando :D")
-	datos= client_socket.recv(1024) #Todo el rato escucho al servidor
-	print("OMG recibi algo")
-	if(datos.decode()=="SI"):
-		turnoParaJugar=True
-		print("Es mi turno para jugar")
-	elif(datos.decode()=="NO"):
-		turnoParaJugar=False
-		print("No es mi turno para jugar")
-	else:
-		dadosOponenteBYTES=datos.decode()
-		dadosOponente=int(dadosOponenteBYTES)
-		print(f"Datos de los otros jugadores:",dadosOponenteBYTES)
-
+hilo_turtle.start()
+hilo_socket.start()
