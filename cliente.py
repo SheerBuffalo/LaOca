@@ -1,9 +1,16 @@
-#version 0.22
+#version 5.30
 #primer numero julio, segundo alan
+
+import threading
+import time
 import turtle #Inside_Out
 import random
 import socket
 
+turnoParaJugar = False #Es mi turno para jugar?
+identificador="0" #Que jugador soy?
+casillaOrigen=1 #En que casilla empiezo?
+suma=0 #Cuanto saque en los dados?
 boton_x =-10
 boton_y =-10
 botonLon =50  
@@ -14,10 +21,12 @@ dado2=0
 wn = turtle.Screen()
 wn.bgcolor("light green")
 skk = turtle.Turtle()
-wn.title("Cliente")
 skk.penup()
 skk.goto(-200, -200)  # Posición inicial del tablero
 skk.pendown()
+skk.speed(40)
+jugador=turtle.Turtle()
+
 
 colores = {
     "red": "rojo",
@@ -108,12 +117,14 @@ def dibujarTablero():
 	skk.forward(100)
 	draw_rect_button(skk)
 	wn.onclick(click)
-	turtle.done()
+	wn.mainloop()
 	
 def conexionCliente(cliente):
+	global identificador
 	cliente.connect(('192.168.0.194', 12345))
 	data = cliente.recv(1024)  # recibe datos del servidor
 	print('Received from server: ', data.decode())
+	identificador=data.decode()
 
 def dibujoCuadrado(tamano_casilla, i):
 
@@ -146,17 +157,143 @@ def draw_rect_button(pen, message = 'dado'):
     pen.write(message, font = ('Arial', 11, 'normal'))
 
 def click(x,y):
-	global client_socket
+	global client_socket, suma, turnoParaJugar
 	if boton_x<=x<=boton_x+botonLon:
 		if boton_y<=y<=boton_y+botonan:
+			#Si entra aqui es que se dio clic al boton
 			dado1=random.randint(1,6)
 			dado2=random.randint(1,6)
-	print(f"Sacaste los numeros", dado1, dado2)
-	suma=dado1+dado2
-	client_socket.send(suma)
-			
+			print(f"Sacaste los numeros", dado1, dado2)
+			suma=dado1+dado2
+			if(turnoParaJugar): #Si no es su turno, no envia nada y no molesta al servidor
+				client_socket.send(str(suma).encode())
+				avanzarJugador(jugador, suma)
+				turnoParaJugar = False
+
+
+def avanzarJugador(tortuga, num_avance):
+	global casillaOrigen
+	retacha=False
+	for i in range(num_avance):
+		posicion = evaluacionPosicion(casillaOrigen)
+		if(not retacha):
+			posicionDestino = evaluacionPosicion(casillaOrigen+1)
+			if(posicion!=posicionDestino):
+				if(posicionDestino=="DIAGONAL"):
+					tortuga.fd(35)
+					tortuga.left(45)
+					tortuga.fd(25)
+				else:
+					tortuga.fd(30)
+					tortuga.left(45)
+					tortuga.fd(35)
+			elif(posicionDestino==posicion):
+				tortuga.fd(55)
+			casillaOrigen+=1
+			if(casillaOrigen==63):
+				retacha=True
+		else:
+			posicionDestino = evaluacionPosicion(casillaOrigen-1)
+			if(posicion!=posicionDestino):
+				if(posicionDestino=="DIAGONAL"):
+					tortuga.backward(35)
+					tortuga.right(45)
+					tortuga.backward(25)
+				else:
+					tortuga.backward(30)
+					tortuga.right(45)
+					tortuga.backward(35)
+			elif(posicionDestino==posicion):
+				tortuga.backward(55)
+			casillaOrigen-=1
+		print(casillaOrigen)
+	return casillaOrigen
+
+def evaluacionPosicion(num_casilla):
+	esLinea_1 = num_casilla>=0 and num_casilla<9
+	if(esLinea_1):
+		return "LINEA"
+	esDiagonal_1 = num_casilla == 9
+	if(esDiagonal_1):
+		return "DIAGONAL"
+	esVertical_1 = num_casilla>9 and num_casilla<16
+	if(esVertical_1):
+		return "VERTICAL"
+	esDiagonal_2 = num_casilla==16
+	if(esDiagonal_2):
+		return "DIAGONAL"
+	esLinea_2 = num_casilla>16 and num_casilla<26
+	if(esLinea_2):
+		return "LINEA"
+	esDiagonal_3 = num_casilla == 26
+	if(esDiagonal_3):
+		return "DIAGONAL"
+	esVertical_2 = num_casilla>26 and num_casilla<32
+	if(esVertical_2):
+		return "VERTICAL"
+	esDiagonal_4 = num_casilla==32
+	if(esDiagonal_4):
+		return "DIAGONAL"
+	esLinea_3 = num_casilla>32 and num_casilla<41
+	if(esLinea_3):
+		return "LINEA"
+	esDiagonal_5 = num_casilla == 41
+	if(esDiagonal_5):
+		return "DIAGONAL"
+	esVertical_3 = num_casilla>41 and num_casilla<46
+	if(esVertical_3):
+		return "VERTICAL"
+	esDiagonal_6 = num_casilla==46
+	if(esDiagonal_6):
+		return "DIAGONAL"
+	esLinea_4 = num_casilla>46 and num_casilla<54
+	if(esLinea_4):
+		return "LINEA"
+	esDiagonal_7 = num_casilla == 54
+	if(esDiagonal_7):
+		return "DIAGONAL"
+	esVertical_4 = num_casilla>54 and num_casilla<58
+	if(esVertical_4):
+		return "VERTICAL"
+	esDiagonal_8 = num_casilla==58
+	if(esDiagonal_8):
+		return "DIAGONAL"
+	esLinea_5 = num_casilla>58 and num_casilla<=63
+	if(esLinea_5):
+		return "LINEA"
+	
+##########	MAIN	 ###################3
 
 conexionCliente(client_socket)
-print("Sali del bucle")
+if(identificador=="1"):
+	jugador.color("white")
+	wn.title("Cliente1")
+elif(identificador=="2"):
+	jugador.color("black")
+	wn.title("Cliente2")
+elif(identificador=="3"):
+	jugador.color("brown")
+	wn.title("Cliente3")
+	
+
+jugador.shape("triangle")
+jugador.penup()
+jugador.speed(0)
+jugador.setposition(-175,-225)
 dibujarTablero()
+
+while True:
+	print("Estoy escuchando :D")
+	datos= client_socket.recv(1024) #Todo el rato escucho al servidor
+	print("OMG recibi algo")
+	if(datos.decode()=="SI"):
+		turnoParaJugar=True
+		print("Es mi turno para jugar")
+	elif(datos.decode()=="NO"):
+		turnoParaJugar=False
+		print("No es mi turno para jugar")
+	else:
+		dadosOponenteBYTES=datos.decode()
+		dadosOponente=int(dadosOponenteBYTES)
+		print(f"Datos de los otros jugadores:",dadosOponenteBYTES)
 
